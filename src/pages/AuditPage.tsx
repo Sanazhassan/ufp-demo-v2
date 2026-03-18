@@ -260,7 +260,7 @@ export function AuditPage() {
                   >
                     <option value="all">All Modules</option>
                     <option value="linear">Linear</option>
-                    <option value="ddl">DDL</option>
+                    <option value="ddl">Advanced Targeting</option>
                     <option value="digital">Digital</option>
                     <option value="finance">Finance</option>
                   </select>

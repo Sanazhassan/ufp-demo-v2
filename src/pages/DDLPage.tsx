@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react';
 import { Upload, RefreshCw, Eye, Lock } from 'lucide-react';
 import { Header } from '../components/layout';
-import { FilterRail, DataTable, Badge, Tabs, TabList, TabTrigger, TabContent } from '../components/ui';
+import { FilterRail, DataTable, Badge, Tabs, TabList, TabTrigger, TabContent, StatCard } from '../components/ui';
 import { ValidationPanel } from '../components/ui/ValidationPanel';
 import { DataInputsPanel, ddlDataInputs } from '../components/ui/DataInputsPanel';
-import { BarChart, HeatmapChart, TrendChart } from '../components/charts';
+import { BarChart, HeatmapChart, TrendChart, GaugeChart } from '../components/charts';
 import { useAuthStore } from '../stores/authStore';
 import { ddlValidations } from '../data/validationData';
 import {
@@ -132,6 +132,20 @@ export function DDLPage() {
     return filteredForecasts.reduce((a, b) => a + b.mape, 0) / filteredForecasts.length;
   }, [filteredForecasts]);
 
+  const totalImpressions = useMemo(() => {
+    return filteredForecasts.reduce((sum, f) => sum + f.impressions, 0);
+  }, [filteredForecasts]);
+
+  const networkCoverage = useMemo(() => {
+    const covered = new Set(filteredForecasts.map((f) => f.networkId)).size;
+    return (covered / networks.length) * 100;
+  }, [filteredForecasts]);
+
+  const targetCoverage = useMemo(() => {
+    const covered = new Set(filteredForecasts.map((f) => f.targetSegmentId)).size;
+    return (covered / targetSegments.length) * 100;
+  }, [filteredForecasts]);
+
   const columns = [
     {
       key: 'networkId',
@@ -189,7 +203,7 @@ export function DDLPage() {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <Header
-        title="DDL Workspace"
+        title="Advanced Targeting Workspace"
         subtitle="Advanced target audience forecasting"
         actions={
           <div className="flex items-center gap-2">
@@ -215,7 +229,7 @@ export function DDLPage() {
             >
               {!permission.canPublish && <Lock size={14} />}
               <Upload size={16} />
-              Publish DDL Forecast
+              Publish Forecast
             </button>
           </div>
         }
@@ -236,41 +250,45 @@ export function DDLPage() {
         <div className="flex-1 overflow-y-auto p-6">
           {/* Data Inputs & Validation Panels */}
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <DataInputsPanel title="DDL Data Sources" inputs={ddlDataInputs} />
+            <DataInputsPanel title="Advanced Targeting Data Sources" inputs={ddlDataInputs} />
             <ValidationPanel 
-              title="DDL Validation Gates" 
+              title="Advanced Targeting Validation Gates" 
               validations={ddlValidations}
-              onRevalidate={() => console.log('Revalidating DDL...')}
+              onRevalidate={() => console.log('Revalidating Advanced Targeting...')}
             />
           </div>
 
           {/* Stats Row */}
-          <div className="grid grid-cols-4 gap-4 mb-6">
-            <div className="card p-4">
-              <div className="text-sm text-gray-500">Average MAPE</div>
-              <div
-                className={`text-2xl font-bold ${
-                  avgMape < 4 ? 'text-green-600' : avgMape < 6 ? 'text-yellow-600' : 'text-red-600'
-                }`}
-              >
-                {avgMape.toFixed(1)}%
-              </div>
+          <div className="grid grid-cols-5 gap-4 mb-6">
+            <StatCard
+              title="Total Impressions"
+              value={`${(totalImpressions / 1e9).toFixed(2)}B`}
+              trend="up"
+            />
+            <StatCard
+              title="Active Segments"
+              value={(new Set(filteredForecasts.map((f) => f.targetSegmentId)).size).toString()}
+            />
+            <StatCard
+              title="Average MAPE"
+              value={`${avgMape.toFixed(1)}%`}
+              variant={avgMape < 4 ? 'success' : avgMape < 6 ? 'warning' : 'danger'}
+            />
+            <div className="card p-4 flex items-center justify-center">
+              <GaugeChart
+                value={networkCoverage}
+                title="Network Coverage"
+                size={120}
+                thresholds={{ warning: 70, danger: 50 }}
+              />
             </div>
-            <div className="card p-4">
-              <div className="text-sm text-gray-500">Forecasts</div>
-              <div className="text-2xl font-bold text-gray-900">{filteredForecasts.length}</div>
-            </div>
-            <div className="card p-4">
-              <div className="text-sm text-gray-500">Networks Covered</div>
-              <div className="text-2xl font-bold text-gray-900">
-                {new Set(filteredForecasts.map((f) => f.networkId)).size}
-              </div>
-            </div>
-            <div className="card p-4">
-              <div className="text-sm text-gray-500">Active Targets</div>
-              <div className="text-2xl font-bold text-gray-900">
-                {new Set(filteredForecasts.map((f) => f.targetSegmentId)).size}
-              </div>
+            <div className="card p-4 flex items-center justify-center">
+              <GaugeChart
+                value={targetCoverage}
+                title="Target Coverage"
+                size={120}
+                thresholds={{ warning: 70, danger: 50 }}
+              />
             </div>
           </div>
 
@@ -340,7 +358,7 @@ export function DDLPage() {
           {/* Data Table */}
           <div className="card">
             <div className="card-header flex items-center justify-between">
-              <span>DDL Forecast Table</span>
+              <span>Advanced Targeting Forecast Table</span>
               {!permission.canEdit && (
                 <span className="flex items-center gap-1 text-sm text-yellow-600">
                   <Lock size={12} /> View only mode

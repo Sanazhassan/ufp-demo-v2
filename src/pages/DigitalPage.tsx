@@ -7,7 +7,7 @@ import { DataInputsPanel, digitalDataInputs } from '../components/ui/DataInputsP
 import { TrendChart, BarChart, GaugeChart } from '../components/charts';
 import { useAuthStore } from '../stores/authStore';
 import { digitalValidations } from '../data/validationData';
-import { generateDigitalForecasts } from '../data/mockData';
+import { generateDigitalForecasts, digitalBrandSites } from '../data/mockData';
 import type { DigitalForecast, ForecastPoint } from '../types';
 
 export function DigitalPage() {
@@ -18,6 +18,8 @@ export function DigitalPage() {
 
   const [filters, setFilters] = useState<Record<string, string[]>>({
     brandSites: [],
+    category: [],
+    tier: [],
     platforms: [],
   });
 
@@ -28,15 +30,32 @@ export function DigitalPage() {
     {
       id: 'brandSites',
       title: 'Brand/Site',
-      options: [...new Set(forecasts.map((f) => f.brandSite))].map((s) => ({
-        id: s,
-        label: s,
+      options: digitalBrandSites.map((b) => ({
+        id: b.name,
+        label: b.name,
       })),
+    },
+    {
+      id: 'category',
+      title: 'Category',
+      options: [...new Set(digitalBrandSites.map(b => b.category))].map((c) => ({
+        id: c,
+        label: c,
+      })),
+    },
+    {
+      id: 'tier',
+      title: 'Tier',
+      options: [
+        { id: 'Premium', label: 'Premium' },
+        { id: 'Standard', label: 'Standard' },
+        { id: 'Niche', label: 'Niche' },
+      ],
     },
     {
       id: 'platforms',
       title: 'Platform',
-      options: [...new Set(forecasts.map((f) => f.platform))].map((p) => ({
+      options: ['Desktop', 'Mobile Web', 'Mobile App', 'CTV', 'Tablet', 'Smart TV'].map((p) => ({
         id: p,
         label: p,
       })),
@@ -47,6 +66,10 @@ export function DigitalPage() {
     return forecasts.filter((f) => {
       if (filters.brandSites.length > 0 && !filters.brandSites.includes(f.brandSite)) return false;
       if (filters.platforms.length > 0 && !filters.platforms.includes(f.platform)) return false;
+      // Filter by category and tier using brandSites lookup
+      const brandInfo = digitalBrandSites.find(b => b.name === f.brandSite);
+      if (filters.category.length > 0 && brandInfo && !filters.category.includes(brandInfo.category)) return false;
+      if (filters.tier.length > 0 && brandInfo && !filters.tier.includes(brandInfo.tier)) return false;
       return true;
     });
   }, [forecasts, filters]);
@@ -63,13 +86,20 @@ export function DigitalPage() {
       g.demand += f.allocatedDemand;
     });
     return Array.from(grouped.entries())
-      .map(([brandSite, data]) => ({
-        label: brandSite,
-        value: data.views,
-        capacity: data.capacity,
-        demand: data.demand,
-        fillRate: (data.demand / data.capacity) * 100,
-      }))
+      .map(([brandSite, data]) => {
+        const brandInfo = digitalBrandSites.find(b => b.name === brandSite);
+        return {
+          label: brandSite,
+          value: data.views,
+          capacity: data.capacity,
+          demand: data.demand,
+          fillRate: (data.demand / data.capacity) * 100,
+          category: brandInfo?.category || 'Other',
+          tier: brandInfo?.tier || 'Standard',
+          avgCPM: brandInfo?.avgCPM || 30,
+          fillTarget: brandInfo?.fillTarget || 80,
+        };
+      })
       .sort((a, b) => b.value - a.value);
   }, [filteredForecasts]);
 
@@ -239,6 +269,7 @@ export function DigitalPage() {
           <Tabs defaultValue="portfolio">
             <TabList className="mb-4">
               <TabTrigger value="portfolio">Portfolio Forecast</TabTrigger>
+              <TabTrigger value="brands">Brand/Site Details</TabTrigger>
               <TabTrigger value="allocation">Allocation / Avails</TabTrigger>
             </TabList>
 
@@ -263,6 +294,91 @@ export function DigitalPage() {
                     />
                   </div>
                 </div>
+              </div>
+            </TabContent>
+
+            <TabContent value="brands">
+              <div className="card mb-6">
+                <div className="card-header flex items-center justify-between">
+                  <span>Brand/Site Performance Overview</span>
+                  <span className="text-sm text-gray-500">{aggregatedByBrandSite.length} brands active</span>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-4 py-3 text-left font-medium text-gray-700">Brand/Site</th>
+                        <th className="px-4 py-3 text-left font-medium text-gray-700">Category</th>
+                        <th className="px-4 py-3 text-center font-medium text-gray-700">Tier</th>
+                        <th className="px-4 py-3 text-right font-medium text-gray-700">Forecast Views</th>
+                        <th className="px-4 py-3 text-right font-medium text-gray-700">Capacity</th>
+                        <th className="px-4 py-3 text-right font-medium text-gray-700">Demand</th>
+                        <th className="px-4 py-3 text-center font-medium text-gray-700">Fill Rate</th>
+                        <th className="px-4 py-3 text-center font-medium text-gray-700">Target</th>
+                        <th className="px-4 py-3 text-right font-medium text-gray-700">Avg CPM</th>
+                        <th className="px-4 py-3 text-center font-medium text-gray-700">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {aggregatedByBrandSite.map((brand) => {
+                        const fillDiff = brand.fillRate - brand.fillTarget;
+                        const status = fillDiff >= 0 ? 'On Track' : fillDiff > -10 ? 'At Risk' : 'Below Target';
+                        const statusColor = fillDiff >= 0 ? 'text-green-600 bg-green-50' : fillDiff > -10 ? 'text-yellow-600 bg-yellow-50' : 'text-red-600 bg-red-50';
+                        return (
+                          <tr key={brand.label} className="border-b border-gray-100 hover:bg-gray-50">
+                            <td className="px-4 py-3 font-medium text-gray-900">{brand.label}</td>
+                            <td className="px-4 py-3 text-gray-600">{brand.category}</td>
+                            <td className="px-4 py-3 text-center">
+                              <Badge variant={brand.tier === 'Premium' ? 'primary' : brand.tier === 'Standard' ? 'secondary' : 'outline'}>
+                                {brand.tier}
+                              </Badge>
+                            </td>
+                            <td className="px-4 py-3 text-right text-gray-900">{(brand.value / 1e6).toFixed(1)}M</td>
+                            <td className="px-4 py-3 text-right text-gray-600">{(brand.capacity / 1e6).toFixed(1)}M</td>
+                            <td className="px-4 py-3 text-right text-gray-600">{(brand.demand / 1e6).toFixed(1)}M</td>
+                            <td className="px-4 py-3 text-center">
+                              <div className="flex items-center justify-center gap-2">
+                                <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                  <div 
+                                    className={`h-full rounded-full ${brand.fillRate >= brand.fillTarget ? 'bg-green-500' : brand.fillRate >= brand.fillTarget - 10 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                    style={{ width: `${Math.min(brand.fillRate, 100)}%` }}
+                                  />
+                                </div>
+                                <span className="text-xs font-medium">{brand.fillRate.toFixed(1)}%</span>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 text-center text-gray-500">{brand.fillTarget}%</td>
+                            <td className="px-4 py-3 text-right font-medium text-gray-900">${brand.avgCPM.toFixed(2)}</td>
+                            <td className="px-4 py-3 text-center">
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>{status}</span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+              {/* Category Summary */}
+              <div className="grid grid-cols-4 gap-4">
+                {['Streaming', 'Sports', 'Entertainment', 'News'].map(category => {
+                  const categoryBrands = aggregatedByBrandSite.filter(b => b.category === category);
+                  const totalViews = categoryBrands.reduce((sum, b) => sum + b.value, 0);
+                  const avgFill = categoryBrands.length > 0 ? categoryBrands.reduce((sum, b) => sum + b.fillRate, 0) / categoryBrands.length : 0;
+                  const avgCPM = categoryBrands.length > 0 ? categoryBrands.reduce((sum, b) => sum + b.avgCPM, 0) / categoryBrands.length : 0;
+                  return (
+                    <div key={category} className="card p-4">
+                      <div className="text-sm font-medium text-gray-500 mb-1">{category}</div>
+                      <div className="text-xl font-bold text-gray-900">{(totalViews / 1e9).toFixed(2)}B views</div>
+                      <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                        <span>{categoryBrands.length} brands</span>
+                        <span>Avg Fill: {avgFill.toFixed(0)}%</span>
+                        <span>CPM: ${avgCPM.toFixed(0)}</span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </TabContent>
 

@@ -34,7 +34,7 @@ export const financeValidations: ValidationResult[] = [
   { id: 'fin_v2', category: 'finance', status: 'fail', checkName: 'Stewardship Liability Sync', message: 'Q2 liability data missing for 3 networks', affectedRecords: 45 },
   { id: 'fin_v3', category: 'finance', status: 'warning', checkName: 'SAP Actuals Freshness', message: 'SAP data is 3 days behind', affectedRecords: 1200 },
   { id: 'fin_v4', category: 'finance', status: 'pass', checkName: 'Linear Forecast Input', message: 'Latest Linear forecast loaded', affectedRecords: 0 },
-  { id: 'fin_v5', category: 'finance', status: 'pass', checkName: 'DDL Forecast Input', message: 'Latest DDL forecast loaded', affectedRecords: 0 },
+  { id: 'fin_v5', category: 'finance', status: 'pass', checkName: 'Adv. Targeting Forecast Input', message: 'Latest Advanced Targeting forecast loaded', affectedRecords: 0 },
   { id: 'fin_v6', category: 'finance', status: 'pass', checkName: 'Digital Forecast Input', message: 'Latest Digital forecast loaded', affectedRecords: 0 },
   { id: 'fin_v7', category: 'finance', status: 'pass', checkName: 'Pricing Guidance', message: 'Current quarter guidance applied', affectedRecords: 0 },
 ];

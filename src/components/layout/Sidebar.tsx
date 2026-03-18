@@ -2,13 +2,13 @@ import { NavLink } from 'react-router-dom';
 import {
   Home,
   TrendingUp,
-  Target,
   Monitor,
   DollarSign,
   FileText,
   ChevronLeft,
   ChevronRight,
   Lock,
+  Layers,
 } from 'lucide-react';
 import { useAppStore } from '../../stores/appStore';
 import { useAuthStore } from '../../stores/authStore';
@@ -16,9 +16,9 @@ import { clsx } from 'clsx';
 
 const navItems = [
   { path: '/', icon: Home, label: 'Home', description: 'Executive dashboard', module: 'home' },
-  { path: '/linear', icon: TrendingUp, label: 'Linear', description: 'Traditional Linear forecasts', module: 'linear' },
-  { path: '/ddl', icon: Target, label: 'DDL', description: 'Advanced target forecasts', module: 'ddl' },
+  { path: '/linear', icon: TrendingUp, label: 'Linear', description: 'Traditional & Advanced Targeting', module: 'linear' },
   { path: '/digital', icon: Monitor, label: 'Digital', description: 'Portfolio & allocation', module: 'digital' },
+  { path: '/converged', icon: Layers, label: 'Converged', description: 'Converged forecast studio', module: 'linear' },
   { path: '/finance', icon: DollarSign, label: 'Finance APM', description: 'Scenario studio', module: 'finance' },
   { path: '/audit', icon: FileText, label: 'Audit Log', description: 'Publishing & history', module: 'audit' },
 ];

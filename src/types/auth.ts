@@ -84,7 +84,7 @@ export const roleLabels: Record<UserRole, string> = {
 export const roleDescriptions: Record<UserRole, string> = {
   executive: 'Strategic view of forecasting metrics',
   research: 'Traditional Linear forecasting and overrides',
-  advanced_ads: 'Data-Driven Linear target forecasting',
+  advanced_ads: 'Advanced Targeting audience forecasting',
   yield: 'Digital portfolio and allocation management',
   finance: 'Revenue projections and scenario modeling',
   admin: 'Full system access and configuration',

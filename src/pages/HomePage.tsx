@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   TrendingUp,
@@ -15,66 +16,99 @@ import {
 } from 'lucide-react';
 import { Header } from '../components/layout';
 import { useAuthStore } from '../stores/authStore';
+import { generateLinearForecasts, generateDDLForecasts, generateDigitalForecasts, targetSegments, networks } from '../data/mockData';
 
 export function HomePage() {
   const { currentUser, getPermission } = useAuthStore();
 
+  // Generate real data from modules
+  const linearData = useMemo(() => {
+    const forecasts = generateLinearForecasts();
+    const total = forecasts.reduce((sum, f) => sum + f.final, 0);
+    const approved = forecasts.filter(f => f.status === 'approved' || f.status === 'published').length;
+    const approvalRate = forecasts.length > 0 ? (approved / forecasts.length) * 100 : 0;
+    return { total, count: forecasts.length, approvalRate };
+  }, []);
+
+  const ddlData = useMemo(() => {
+    const forecasts = generateDDLForecasts();
+    const totalImpressions = forecasts.reduce((sum, f) => sum + f.impressions, 0);
+    const avgMape = forecasts.length > 0 ? forecasts.reduce((sum, f) => sum + f.mape, 0) / forecasts.length : 0;
+    const networkCoverage = (new Set(forecasts.map(f => f.networkId)).size / networks.length) * 100;
+    const targetCoverage = (new Set(forecasts.map(f => f.targetSegmentId)).size / targetSegments.length) * 100;
+    return { totalImpressions, avgMape, networkCoverage, targetCoverage };
+  }, []);
+
+  const digitalData = useMemo(() => {
+    const forecasts = generateDigitalForecasts();
+    const totalViews = forecasts.reduce((sum, f) => sum + f.forecastedViews, 0);
+    const totalCapacity = forecasts.reduce((sum, f) => sum + f.capacity, 0);
+    const totalDemand = forecasts.reduce((sum, f) => sum + f.allocatedDemand, 0);
+    const fillRate = totalCapacity > 0 ? (totalDemand / totalCapacity) * 100 : 0;
+    return { totalViews, totalCapacity, totalDemand, fillRate };
+  }, []);
+
+  // Calculate totals - using CPM assumption for revenue conversion
+  const avgCPM = 34.28;
+  const linearRevenue = (linearData.total * avgCPM) / 1000;
+  const ddlRevenue = (ddlData.totalImpressions * avgCPM * 0.8) / 1000; // 80% of CPM for DDL
+  const digitalRevenue = (digitalData.totalViews * avgCPM * 1.2) / 1000; // 120% premium for digital
+  const totalRevenue = linearRevenue + ddlRevenue + digitalRevenue;
+
   // Strategic KPIs for executive view
   const strategicMetrics = {
-    totalRevenue: { value: 2.27, unit: 'B', change: 3.2, label: 'Total Forecast Revenue', trend: 'up' },
+    totalRevenue: { value: (totalRevenue / 1e9).toFixed(2), unit: 'B', change: 3.2, label: 'Total Forecast Revenue', trend: 'up' },
     yoyGrowth: { value: 4.8, unit: '%', change: 1.2, label: 'YoY Growth', trend: 'up' },
     forecastAccuracy: { value: 96.2, unit: '%', change: 0.8, label: 'Forecast Accuracy', trend: 'up' },
     riskExposure: { value: 45, unit: 'M', change: -12, label: 'Risk Exposure', trend: 'down' },
   };
 
+  // Combined Linear revenue (Traditional + Advanced Targeting)
+  const combinedLinearRevenue = linearRevenue + ddlRevenue;
+  const combinedLinearImpressions = linearData.total + ddlData.totalImpressions;
+
   const moduleStatus = [
     {
-      name: 'Traditional Linear',
+      name: 'Linear',
       path: '/linear',
       icon: TrendingUp,
       color: 'bg-blue-500',
-      revenue: '$1.42B',
-      status: 'On Track',
-      statusColor: 'text-green-600',
-      change: '+2.1%',
+      revenue: `$${(combinedLinearRevenue / 1e9).toFixed(2)}B`,
+      impressions: combinedLinearImpressions,
+      status: linearData.approvalRate > 70 && ddlData.avgMape < 5 ? 'On Track' : 'Attention',
+      statusColor: linearData.approvalRate > 70 && ddlData.avgMape < 5 ? 'text-green-600' : 'text-yellow-600',
+      change: '+3.2%',
       lastPublished: '4 hours ago',
+      subtitle: 'Traditional + Advanced Targeting',
       canAccess: getPermission('linear').canView,
-    },
-    {
-      name: 'Data-Driven Linear',
-      path: '/ddl',
-      icon: Target,
-      color: 'bg-green-500',
-      revenue: '$380M',
-      status: 'On Track',
-      statusColor: 'text-green-600',
-      change: '+5.8%',
-      lastPublished: '6 hours ago',
-      canAccess: getPermission('ddl').canView,
     },
     {
       name: 'Digital',
       path: '/digital',
       icon: Monitor,
       color: 'bg-purple-500',
-      revenue: '$425M',
-      status: 'Attention',
-      statusColor: 'text-yellow-600',
+      revenue: `$${(digitalRevenue / 1e6).toFixed(0)}M`,
+      impressions: digitalData.totalViews,
+      status: digitalData.fillRate > 80 ? 'On Track' : 'Attention',
+      statusColor: digitalData.fillRate > 80 ? 'text-green-600' : 'text-yellow-600',
       change: '+8.2%',
       lastPublished: '2 hours ago',
+      subtitle: 'Portfolio & allocation',
       canAccess: getPermission('digital').canView,
     },
     {
-      name: 'Finance APM',
-      path: '/finance',
-      icon: DollarSign,
-      color: 'bg-emerald-500',
-      revenue: '$2.27B',
-      status: 'Pending',
-      statusColor: 'text-blue-600',
-      change: '+3.2%',
-      lastPublished: 'In Progress',
-      canAccess: getPermission('finance').canView,
+      name: 'Converged',
+      path: '/converged',
+      icon: Target,
+      color: 'bg-green-500',
+      revenue: `$${(totalRevenue / 1e9).toFixed(2)}B`,
+      impressions: combinedLinearImpressions + digitalData.totalViews,
+      status: 'On Track',
+      statusColor: 'text-green-600',
+      change: '+4.1%',
+      lastPublished: '2 hours ago',
+      subtitle: 'Cross-platform forecasting',
+      canAccess: getPermission('linear').canView,
     },
   ];
 
@@ -149,7 +183,7 @@ export function HomePage() {
         {/* Module Overview Cards */}
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Forecasting Modules</h2>
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             {moduleStatus.map((module) => (
               <div
                 key={module.name}
@@ -166,6 +200,7 @@ export function HomePage() {
                   </span>
                 </div>
                 <h3 className="font-semibold text-gray-900">{module.name}</h3>
+                {module.subtitle && <p className="text-xs text-gray-500">{module.subtitle}</p>}
                 <p className="text-2xl font-bold text-gray-900 mt-1">{module.revenue}</p>
                 <div className="flex items-center justify-between mt-3">
                   <span className="text-sm text-green-600 font-medium">{module.change}</span>
@@ -233,28 +268,28 @@ export function HomePage() {
                   <BarChart3 size={18} className="text-blue-500" />
                   <span className="text-sm text-gray-600">Linear Impressions</span>
                 </div>
-                <span className="font-semibold">485M</span>
+                <span className="font-semibold">{(linearData.total / 1e6).toFixed(0)}M</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-2">
                   <PieChart size={18} className="text-purple-500" />
                   <span className="text-sm text-gray-600">Digital Fill Rate</span>
                 </div>
-                <span className="font-semibold">87.3%</span>
+                <span className="font-semibold">{digitalData.fillRate.toFixed(1)}%</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-2">
                   <Target size={18} className="text-green-500" />
-                  <span className="text-sm text-gray-600">DDL Coverage</span>
+                  <span className="text-sm text-gray-600">Targeting Coverage</span>
                 </div>
-                <span className="font-semibold">92.1%</span>
+                <span className="font-semibold">{ddlData.targetCoverage.toFixed(1)}%</span>
               </div>
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-2">
                   <DollarSign size={18} className="text-emerald-500" />
                   <span className="text-sm text-gray-600">Avg CPM</span>
                 </div>
-                <span className="font-semibold">$34.28</span>
+                <span className="font-semibold">${avgCPM.toFixed(2)}</span>
               </div>
             </div>
           </div>

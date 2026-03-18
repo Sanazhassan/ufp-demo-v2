@@ -3,10 +3,10 @@ import { Layout } from './components/layout';
 import {
   HomePage,
   LinearPage,
-  DDLPage,
   DigitalPage,
   FinancePage,
   AuditPage,
+  ConvergedPage,
 } from './pages';
 
 function App() {
@@ -16,8 +16,8 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
           <Route path="linear" element={<LinearPage />} />
-          <Route path="ddl" element={<DDLPage />} />
           <Route path="digital" element={<DigitalPage />} />
+          <Route path="converged" element={<ConvergedPage />} />
           <Route path="finance" element={<FinancePage />} />
           <Route path="audit" element={<AuditPage />} />
         </Route>

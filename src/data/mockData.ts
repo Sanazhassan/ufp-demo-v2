@@ -154,15 +154,20 @@ export const generateEnsembleForecast = (days: number = 90): EnsembleForecast =>
 };
 
 // Generate Linear Forecasts
+// Target: ~485M total impressions to match Executive Dashboard
 export const generateLinearForecasts = (): LinearForecast[] => {
   const forecasts: LinearForecast[] = [];
   const statuses: LinearForecast['status'][] = ['draft', 'pending_approval', 'approved', 'published'];
   const methodologies: LinearForecast['methodology'][] = ['ACM', 'C3', 'C7', 'ProgAvgLive'];
   
+  // Calculate rows and target per row for ~485M total
+  const numRows = sellingTitles.length * 4 * broadcastQuarters.length;
+  const avgPerRow = 485000000 / numRows;
+  
   sellingTitles.forEach(title => {
     demos.slice(0, 4).forEach(demo => {
       broadcastQuarters.forEach(quarter => {
-        const baseline = randomInt(500, 5000);
+        const baseline = Math.round(avgPerRow * randomBetween(0.7, 1.3));
         const hasOverride = Math.random() > 0.7;
         const override = hasOverride ? baseline * randomBetween(0.9, 1.15) : undefined;
         
@@ -213,28 +218,75 @@ export const generateDDLForecasts = (): DDLForecast[] => {
   return forecasts;
 };
 
+// Digital Brand/Site configurations with details
+export const digitalBrandSites = [
+  // Streaming Services
+  { id: 'hulu', name: 'Hulu', category: 'Streaming', tier: 'Premium', avgCPM: 42.50, fillTarget: 92 },
+  { id: 'disney_plus', name: 'Disney+', category: 'Streaming', tier: 'Premium', avgCPM: 48.00, fillTarget: 95 },
+  { id: 'espn_plus', name: 'ESPN+', category: 'Streaming', tier: 'Premium', avgCPM: 55.00, fillTarget: 88 },
+  { id: 'star_plus', name: 'Star+', category: 'Streaming', tier: 'Standard', avgCPM: 32.00, fillTarget: 85 },
+  // Sports Properties
+  { id: 'espn_com', name: 'ESPN.com', category: 'Sports', tier: 'Premium', avgCPM: 38.50, fillTarget: 90 },
+  { id: 'espn_app', name: 'ESPN App', category: 'Sports', tier: 'Premium', avgCPM: 44.00, fillTarget: 91 },
+  { id: 'sec_network', name: 'SEC Network Digital', category: 'Sports', tier: 'Standard', avgCPM: 28.00, fillTarget: 82 },
+  { id: 'acc_network', name: 'ACC Network Digital', category: 'Sports', tier: 'Standard', avgCPM: 26.00, fillTarget: 80 },
+  // Entertainment
+  { id: 'abc_com', name: 'ABC.com', category: 'Entertainment', tier: 'Premium', avgCPM: 35.00, fillTarget: 88 },
+  { id: 'abc_app', name: 'ABC App', category: 'Entertainment', tier: 'Premium', avgCPM: 38.00, fillTarget: 89 },
+  { id: 'freeform', name: 'Freeform Digital', category: 'Entertainment', tier: 'Standard', avgCPM: 24.00, fillTarget: 78 },
+  { id: 'fx_networks', name: 'FX Networks', category: 'Entertainment', tier: 'Premium', avgCPM: 36.00, fillTarget: 85 },
+  { id: 'nat_geo', name: 'National Geographic', category: 'Entertainment', tier: 'Premium', avgCPM: 32.00, fillTarget: 82 },
+  // News
+  { id: 'abc_news', name: 'ABC News Digital', category: 'News', tier: 'Standard', avgCPM: 22.00, fillTarget: 75 },
+  { id: 'gma_digital', name: 'GMA Digital', category: 'News', tier: 'Standard', avgCPM: 25.00, fillTarget: 80 },
+  { id: 'fivethirtyeight', name: 'FiveThirtyEight', category: 'News', tier: 'Niche', avgCPM: 18.00, fillTarget: 70 },
+  // Kids & Family
+  { id: 'disney_junior', name: 'Disney Junior', category: 'Kids', tier: 'Premium', avgCPM: 28.00, fillTarget: 90 },
+  { id: 'disney_channel', name: 'Disney Channel Digital', category: 'Kids', tier: 'Premium', avgCPM: 30.00, fillTarget: 88 },
+  // Lifestyle
+  { id: 'espn_fantasy', name: 'ESPN Fantasy', category: 'Lifestyle', tier: 'Standard', avgCPM: 20.00, fillTarget: 85 },
+  { id: 'the_undefeated', name: 'The Undefeated', category: 'Lifestyle', tier: 'Niche', avgCPM: 15.00, fillTarget: 65 },
+];
+
 // Generate Digital Forecasts
 export const generateDigitalForecasts = (): DigitalForecast[] => {
-  const brandSites = ['ESPN.com', 'ABC.com', 'Hulu', 'Disney+', 'FX Networks'];
-  const siteSections = ['Homepage', 'Live Sports', 'On Demand', 'News', 'Entertainment'];
-  const platforms = ['Desktop', 'Mobile Web', 'Mobile App', 'CTV', 'Tablet'];
+  const siteSections = ['Homepage', 'Live Sports', 'On Demand', 'News', 'Entertainment', 'Kids', 'Originals'];
+  const platforms = ['Desktop', 'Mobile Web', 'Mobile App', 'CTV', 'Tablet', 'Smart TV'];
   const forecasts: DigitalForecast[] = [];
   
   const dates = generateDateRange(new Date('2026-01-01'), 365);
   
-  brandSites.forEach(brandSite => {
-    siteSections.slice(0, 3).forEach(siteSection => {
+  digitalBrandSites.forEach(brand => {
+    // Select relevant sections based on category
+    const relevantSections = siteSections.filter(s => {
+      if (brand.category === 'Sports') return ['Homepage', 'Live Sports', 'On Demand'].includes(s);
+      if (brand.category === 'News') return ['Homepage', 'News'].includes(s);
+      if (brand.category === 'Kids') return ['Homepage', 'Kids', 'On Demand'].includes(s);
+      if (brand.category === 'Streaming') return ['Homepage', 'On Demand', 'Originals', 'Live Sports'].includes(s);
+      return ['Homepage', 'On Demand', 'Entertainment'].includes(s);
+    });
+    
+    relevantSections.forEach(siteSection => {
       platforms.forEach(platform => {
+        // Weekly data points
         dates.filter((_, i) => i % 7 === 0).forEach(date => {
-          const capacity = randomInt(500000, 5000000);
-          const demand = randomInt(200000, capacity);
+          // Scale capacity by tier
+          const tierMultiplier = brand.tier === 'Premium' ? 1.5 : brand.tier === 'Standard' ? 1.0 : 0.6;
+          const baseCapacity = randomInt(500000, 5000000) * tierMultiplier;
+          const capacity = Math.floor(baseCapacity);
+          
+          // Demand based on fill target with some variance
+          const fillVariance = randomBetween(0.85, 1.15);
+          const targetFill = (brand.fillTarget / 100) * fillVariance;
+          const demand = Math.floor(capacity * Math.min(targetFill, 0.98));
+          
           forecasts.push({
-            id: `${brandSite}_${siteSection}_${platform}_${date}`,
-            brandSite,
+            id: `${brand.id}_${siteSection}_${platform}_${date}`,
+            brandSite: brand.name,
             siteSection,
             platform,
             date,
-            forecastedViews: randomInt(300000, capacity),
+            forecastedViews: randomInt(Math.floor(capacity * 0.3), capacity),
             capacity,
             allocatedDemand: demand,
             availableInventory: capacity - demand,
@@ -244,7 +296,7 @@ export const generateDigitalForecasts = (): DigitalForecast[] => {
     });
   });
   
-  return forecasts.slice(0, 500);
+  return forecasts.slice(0, 800);
 };
 
 // Default scenario levers

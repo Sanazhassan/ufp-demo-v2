@@ -1,6 +1,6 @@
 import { clsx } from 'clsx';
 
-type BadgeVariant = 'default' | 'success' | 'warning' | 'danger' | 'info' | 'outline';
+export type BadgeVariant = 'default' | 'success' | 'warning' | 'danger' | 'info' | 'outline' | 'primary' | 'secondary';
 type BadgeSize = 'sm' | 'md';
 
 interface BadgeProps {
@@ -18,6 +18,8 @@ const variantStyles: Record<BadgeVariant, string> = {
   danger: 'bg-red-100 text-red-800',
   info: 'bg-blue-100 text-blue-800',
   outline: 'bg-transparent border border-gray-300 text-gray-700',
+  primary: 'bg-blue-100 text-blue-800',
+  secondary: 'bg-purple-100 text-purple-800',
 };
 
 const dotColors: Record<BadgeVariant, string> = {
@@ -27,6 +29,8 @@ const dotColors: Record<BadgeVariant, string> = {
   danger: 'bg-red-500',
   info: 'bg-blue-500',
   outline: 'bg-gray-500',
+  primary: 'bg-blue-500',
+  secondary: 'bg-purple-500',
 };
 
 const sizeStyles: Record<BadgeSize, string> = {
