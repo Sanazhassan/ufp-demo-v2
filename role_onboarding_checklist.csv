@@ -1,0 +1,141 @@
+Role,Day,Task_ID,Task,Category,Owner,Dependencies,Status,Notes
+Data Engineer 1,Day 1,DE1-001,Request access to dev environment (Iceberg cluster / Spark / orchestration tooling),Environment Setup,Nirav Dalal,DevOps confirms infra ready,Not Started,Coordinate with DevOps for credentials
+Data Engineer 1,Day 1,DE1-002,Clone project repos and verify build/test pipeline runs locally,Environment Setup,Senior DE 1,,Not Started,
+Data Engineer 1,Day 2,DE1-003,Review solution brief - understand MVP scope (Linear Ent + News) and 7 milestones,Domain Knowledge,Senior DE 1,,Not Started,Focus on data flow sections and consolidation architecture
+Data Engineer 1,Day 2,DE1-004,Team introductions - meet onshore Architect / Finance SME / Engagement Lead,Domain Knowledge,Nirav Dalal,,Not Started,Schedule via Sana Hassan
+Data Engineer 1,Day 3,DE1-005,Request and verify access to iDeal capacity system,Data Access,Senior DE 1,Onshore facilitates access,Not Started,Used for Linear Ent and News capacity data
+Data Engineer 1,Day 3,DE1-006,Request and verify access to SmartView (SAP S/4 HANA),Data Access,Senior DE 1,Onshore facilitates access,Not Started,Used across all Linear models
+Data Engineer 1,Day 4,DE1-007,Review sample Linear Entertainment Excel models (3-4 of 18 network models),Domain Knowledge,Senior DE 1,Finance SME provides models,Not Started,Focus on structure: tabs / formulas / input cells / output cells
+Data Engineer 1,Day 4,DE1-008,Document data fields and transformations observed in Entertainment models,Domain Knowledge,Senior DE 1,DE1-007,Not Started,Map to glossary terms (FDR / ADU / BUF / CUF / Scatter Mix)
+Data Engineer 1,Day 5,DE1-009,Review Linear News (CNN) Excel model,Domain Knowledge,Senior DE 1,Finance SME provides model,Not Started,Note structural differences: preemptions / breaking news assumptions
+Data Engineer 1,Day 5,DE1-010,Document data fields and transformations in News model,Domain Knowledge,Senior DE 1,DE1-009,Not Started,Compare against Entertainment model patterns
+Data Engineer 1,Day 6,DE1-011,Understand Z Bridge -> Z Dataset -> ZZ file consolidation flow end-to-end,Domain Knowledge,Senior DE 1,Finance SME walkthrough,Not Started,This is the critical downstream dependency for all Linear models
+Data Engineer 1,Day 6,DE1-012,Map source-to-target data lineage for Linear Entertainment,Domain Knowledge,Senior DE 1,DE1-008,Not Started,Inputs: P&P / Stewardship -> Model -> Z Bridge -> ZZ
+Data Engineer 1,Day 7,DE1-013,Review Iceberg table design patterns and partitioning strategies,Technical Setup,Senior DE 1,,Not Started,Align with Tech Architect on conventions
+Data Engineer 1,Day 7,DE1-014,Review Spark job configuration and cluster sizing,Technical Setup,Senior DE 1,DevOps,Not Started,Understand compute constraints for pipeline design
+Data Engineer 1,Day 8,DE1-015,Review data dictionary requirements from solution brief,Technical Setup,Senior DE 1,,Not Started,Key metrics: revenue / booked vs delivered / ratecard / units / CPM
+Data Engineer 1,Day 8,DE1-016,Document field-level definitions for Entertainment model inputs and outputs,Technical Setup,Senior DE 1,DE1-008,Not Started,Cross-reference with glossary in Appendix 1
+Data Engineer 1,Day 9,DE1-017,Review ETL/ELT patterns agreed upon by Tech Architect,Technical Setup,Senior DE 1,Tech Architect,Not Started,Understand orchestration framework and scheduling approach
+Data Engineer 1,Day 9,DE1-018,Prototype a sample Iceberg table write using Spark with test data,Technical Setup,Senior DE 1,DE1-013,Not Started,Validate environment end-to-end
+Data Engineer 1,Day 10,DE1-019,Onboarding completion checkpoint - present findings to team,Checkpoint,Nirav Dalal,,Not Started,Cover: access status / domain understanding gaps / technical readiness
+Data Engineer 1,Day 10,DE1-020,Document open questions and blockers for Sprint 1 planning,Checkpoint,Senior DE 1,,Not Started,Feed into Sprint 2 backlog
+Data Engineer 2,Day 1,DE2-001,Request access to dev environment (Iceberg cluster / Spark / orchestration tooling),Environment Setup,Nirav Dalal,DevOps confirms infra ready,Not Started,Coordinate with DevOps for credentials
+Data Engineer 2,Day 1,DE2-002,Clone project repos and verify build/test pipeline runs locally,Environment Setup,Senior DE 2,,Not Started,
+Data Engineer 2,Day 2,DE2-003,Review solution brief - focus on Digital model context (out of MVP but needed for ZZ understanding),Domain Knowledge,Senior DE 2,,Not Started,Understand WRR consolidation even though Digital is Phase 2
+Data Engineer 2,Day 2,DE2-004,Team introductions - meet onshore Architect / Finance SME / Engagement Lead,Domain Knowledge,Nirav Dalal,,Not Started,Schedule via Sana Hassan
+Data Engineer 2,Day 3,DE2-005,Request and verify access to BI Tool,Data Access,Senior DE 2,Onshore facilitates access,Not Started,Used for Linear Ent / Sports / News data pulls
+Data Engineer 2,Day 3,DE2-006,Request and verify access to Stewardship report sources (Ent Research / CNN Research),Data Access,Senior DE 2,Onshore facilitates access,Not Started,Key input for impressions and audience data
+Data Engineer 2,Day 4,DE2-007,Review remaining Linear Entertainment Excel models (focus on different network structures),Domain Knowledge,Senior DE 2,Finance SME provides models,Not Started,Complement DE1 coverage - aim for full 18-model understanding across both DEs
+Data Engineer 2,Day 4,DE2-008,Document variations across Entertainment network models,Domain Knowledge,Senior DE 2,DE2-007,Not Started,Identify which models share structure vs have unique logic
+Data Engineer 2,Day 5,DE2-009,Review P&P (Pricing and Planning) data source structure and refresh cadence,Domain Knowledge,Senior DE 2,Finance SME walkthrough,Not Started,Primary input for booked revenue / impressions / units
+Data Engineer 2,Day 5,DE2-010,Review Stewardship report structure and data refresh cadence,Domain Knowledge,Senior DE 2,DE2-006,Not Started,Used for audience delivery actuals
+Data Engineer 2,Day 6,DE2-011,Understand Z Bridge -> Z Dataset -> ZZ file consolidation (focus on data transformations),Domain Knowledge,Senior DE 2,Finance SME walkthrough,Not Started,Coordinate with DE1 to avoid duplication
+Data Engineer 2,Day 6,DE2-012,Map source-to-target data lineage for Linear News,Domain Knowledge,Senior DE 2,DE1-010,Not Started,Inputs: P&P / Stewardship -> Model -> Z Bridge -> ZZ
+Data Engineer 2,Day 7,DE2-013,Review data quality validation patterns (completeness / accuracy / reconciliation),Technical Setup,Senior DE 2,,Not Started,Align with acceptance criteria: outputs must reconcile with finance records
+Data Engineer 2,Day 7,DE2-014,Understand historical data availability and storage format,Technical Setup,Senior DE 2,Finance SME,Not Started,Required for seasonality signals and backtesting
+Data Engineer 2,Day 8,DE2-015,Document field-level definitions for News model inputs and outputs,Technical Setup,Senior DE 2,DE1-010,Not Started,Cross-reference with glossary in Appendix 1
+Data Engineer 2,Day 8,DE2-016,Review orchestration tooling and scheduling framework,Technical Setup,Senior DE 2,DevOps,Not Started,Understand job dependencies and trigger patterns
+Data Engineer 2,Day 9,DE2-017,Prototype data quality check framework using sample data,Technical Setup,Senior DE 2,DE2-013,Not Started,Build reusable validation functions
+Data Engineer 2,Day 9,DE2-018,Prototype historical data load into Iceberg from sample Excel export,Technical Setup,Senior DE 2,DE1-018,Not Started,Test data type handling and schema evolution
+Data Engineer 2,Day 10,DE2-019,Onboarding completion checkpoint - present findings to team,Checkpoint,Nirav Dalal,,Not Started,Cover: access status / domain understanding gaps / technical readiness
+Data Engineer 2,Day 10,DE2-020,Document open questions and blockers for Sprint 1 planning,Checkpoint,Senior DE 2,,Not Started,Feed into Sprint 2 backlog
+Data Scientist,Day 1,DS-001,Request access to dev environment and analytical tooling,Environment Setup,DS Lead,,Not Started,Python / notebooks / model registry access
+Data Scientist,Day 1,DS-002,Clone project repos and review existing analytical code if any,Environment Setup,DS Lead,,Not Started,
+Data Scientist,Day 2,DS-003,Review solution brief end-to-end with focus on rule-based model scope and acceptance criteria,Domain Knowledge,DS Lead,,Not Started,Key AC: +-5% variance vs existing Excel forecast
+Data Scientist,Day 2,DS-004,Team introductions - meet Finance SME and key stakeholders (Natalia / Jamie),Domain Knowledge,DS Lead,,Not Started,Understand business context for model design
+Data Scientist,Day 3,DS-005,Deep-dive into Linear Entertainment Excel models - map all calculation formulas,Domain Knowledge,DS Lead,Finance SME provides models,Not Started,Focus: FDR rates / revenue by demand source / sellout / CPM / ADU
+Data Scientist,Day 3,DS-006,Document rule-based logic: BUF (Booked Upfront) / CUF (Current Upfront) / Scatter Mix,Domain Knowledge,DS Lead,DS-005,Not Started,These are core revenue decomposition rules
+Data Scientist,Day 4,DS-007,Deep-dive into Linear Entertainment - liability calculation logic,Domain Knowledge,DS Lead,Finance SME walkthrough,Not Started,Map: average CPM -> liability estimate -> manual adjustments
+Data Scientist,Day 4,DS-008,Document cross-network unit reallocation rules (excess units applied to avoid revenue loss),Domain Knowledge,DS Lead,DS-007,Not Started,Critical for accurate liability modeling
+Data Scientist,Day 5,DS-009,Deep-dive into Linear News (CNN) model - map all calculation formulas,Domain Knowledge,DS Lead,Finance SME provides model,Not Started,Focus: preemption assumptions / breaking news adjustments / structural differences from Ent
+Data Scientist,Day 5,DS-010,Document News-specific rules: capacity adjustments / daypart logic / tier (News) handling,Domain Knowledge,DS Lead,DS-009,Not Started,
+Data Scientist,Day 6,DS-011,Map all Nielsen age/gender demos used across models,Domain Knowledge,DS Lead,Finance SME,Not Started,MVP must forecast across ALL demos using consistent equation
+Data Scientist,Day 6,DS-012,Document current single-demo limitation in Excel and multi-demo approach for new model,Domain Knowledge,DS Lead,DS-011,Not Started,This is a key improvement over current state
+Data Scientist,Day 7,DS-013,Understand stewardship number timing (mid-quarter availability) and impact on forecast accuracy,Domain Knowledge,DS Lead,Finance SME,Not Started,Stewardship data lag is a known source of mismatch
+Data Scientist,Day 7,DS-014,Review historical forecast vs actuals data to understand current accuracy baseline,Domain Knowledge,DS Lead,Finance SME provides data,Not Started,Needed to establish performance benchmark for new model
+Data Scientist,Day 8,DS-015,Document backtesting requirements: methodology / metrics / comparison framework,Technical Setup,DS Lead,,Not Started,Automated back-testing is a key MVP deliverable
+Data Scientist,Day 8,DS-016,Identify which manual Finance adjustments are rule-based vs purely judgmental,Domain Knowledge,DS Lead,Finance SME,Not Started,Tenet: Transparency - document automatable vs manual overlays
+Data Scientist,Day 9,DS-017,Draft initial rule-based model architecture (pseudocode / calculation flow),Technical Setup,DS Lead,DS-005 through DS-016,Not Started,Cover: revenue / liability / inventory movement / sellout / CPM
+Data Scientist,Day 9,DS-018,Identify data requirements for rolling 12-month forecast extension,Technical Setup,DS Lead,,Not Started,Current state is 1 quarter - MVP extends to rolling 12 months
+Data Scientist,Day 10,DS-019,Onboarding completion checkpoint - present rule catalog and model architecture draft,Checkpoint,DS Lead,,Not Started,Cover: rules documented / gaps identified / data needs
+Data Scientist,Day 10,DS-020,Document open questions requiring Finance SME clarification,Checkpoint,DS Lead,,Not Started,Feed into Sprint 2 backlog
+Business Analyst,Day 1,BA-001,Review solution brief and stakeholder map,Domain Knowledge,Sana Hassan,,Not Started,Identify all touchpoints for Linear Ent and News
+Business Analyst,Day 1,BA-002,Team introductions - meet offshore team leads and Finance stakeholders,Domain Knowledge,Sana Hassan,,Not Started,
+Business Analyst,Day 2,BA-003,Schedule discovery sessions with Natalia Gordienko (Linear Entertainment stakeholder),Stakeholder Mgmt,Sana Hassan,,Not Started,She owns 18 Entertainment models
+Business Analyst,Day 2,BA-004,Schedule discovery sessions with Jamie Jackette (Linear News stakeholder),Stakeholder Mgmt,Sana Hassan,,Not Started,She owns CNN model
+Business Analyst,Day 3,BA-005,Conduct discovery session 1: Linear Entertainment workflow end-to-end,Discovery,Evgeniya Kapusta,BA-003,Not Started,Map: data inputs -> Excel model -> calculations -> Z Bridge -> ZZ
+Business Analyst,Day 3,BA-006,Document Entertainment workflow: data sources / refresh cadence / manual steps,Discovery,Evgeniya Kapusta,BA-005,Not Started,Capture pain points and time spent per step
+Business Analyst,Day 4,BA-007,Conduct discovery session 2: Linear News (CNN) workflow end-to-end,Discovery,Evgeniya Kapusta,BA-004,Not Started,Map: data inputs -> Excel model -> calculations -> Z Bridge -> ZZ
+Business Analyst,Day 4,BA-008,Document News workflow: preemption handling / breaking news assumptions / structural differences,Discovery,Evgeniya Kapusta,BA-007,Not Started,
+Business Analyst,Day 5,BA-009,Map current data flow: P&P -> Stewardship -> Models -> Z Bridge -> Z Dataset -> ZZ,Discovery,Evgeniya Kapusta,,Not Started,Create visual process flow diagram
+Business Analyst,Day 5,BA-010,Identify all manual touchpoints in current process,Discovery,Evgeniya Kapusta,BA-006 / BA-008,Not Started,Classify: copy-paste / manual calc / judgmental adjustment / reconciliation
+Business Analyst,Day 6,BA-011,Document key dimensions for Entertainment: Daypart / Daypart Hours / Market Type / Tier / Legacy / Network / Status,Discovery,Evgeniya Kapusta,,Not Started,Cross-reference with solution brief tables
+Business Analyst,Day 6,BA-012,Document key dimensions for News: Daypart / Daypart Hours / Network / Tier (News) / Legacy / Status / Internal Order,Discovery,Evgeniya Kapusta,,Not Started,
+Business Analyst,Day 7,BA-013,Map liability forecast process: iDeal pull -> research reports -> copy-paste -> model -> manual adjustments,Discovery,Evgeniya Kapusta,Finance SME walkthrough,Not Started,Liability traceability is a core MVP goal
+Business Analyst,Day 7,BA-014,Document current consolidation challenges (Excel/SharePoint sync issues / manual checks),Discovery,Evgeniya Kapusta,,Not Started,
+Business Analyst,Day 8,BA-015,Draft PRD outline - structure sections based on solution brief scope,Documentation,Evgeniya Kapusta,,Not Started,Sections: business context / user stories / functional reqs / non-functional reqs / AC
+Business Analyst,Day 8,BA-016,Define user personas: Finance Analyst / Finance Manager / Senior Leadership,Documentation,Evgeniya Kapusta,,Not Started,Map to stakeholder list in solution brief
+Business Analyst,Day 9,BA-017,Review and validate dimension/metric definitions with Finance SME,Validation,Evgeniya Kapusta,,Not Started,Ensure alignment between technical team understanding and business intent
+Business Analyst,Day 9,BA-018,Compile discovery findings into structured format for ADD input,Documentation,Evgeniya Kapusta,BA-005 through BA-014,Not Started,
+Business Analyst,Day 10,BA-019,Onboarding completion checkpoint - present discovery findings and PRD outline,Checkpoint,Sana Hassan,,Not Started,Cover: workflows documented / gaps identified / stakeholder alignment
+Business Analyst,Day 10,BA-020,Document open questions and decisions needed for Sprint 2,Checkpoint,Evgeniya Kapusta,,Not Started,Feed into Sprint 2 backlog
+DevOps Engineer,Day 1,DV-001,Review solution brief - focus on infrastructure and deployment requirements,Environment Setup,DevOps Eng,,Not Started,Understand: Iceberg / Spark / orchestration / monitoring needs
+DevOps Engineer,Day 1,DV-002,Verify cloud account access and permissions,Environment Setup,DevOps Eng,,Not Started,
+DevOps Engineer,Day 2,DV-003,Provision dev environment: compute / storage / networking,Infrastructure,DevOps Eng,,Not Started,Iceberg-compatible object storage + Spark cluster
+DevOps Engineer,Day 2,DV-004,Set up infrastructure-as-code repository and templates,Infrastructure,DevOps Eng,,Not Started,Terraform / CloudFormation as appropriate
+DevOps Engineer,Day 3,DV-005,Configure Iceberg catalog and metastore for dev environment,Infrastructure,DevOps Eng,DV-003,Not Started,
+DevOps Engineer,Day 3,DV-006,Set up Spark cluster configuration (dev sizing),Infrastructure,DevOps Eng,DV-003,Not Started,Coordinate with DE team on compute requirements
+DevOps Engineer,Day 4,DV-007,Set up CI/CD pipeline scaffolding (build / test / deploy stages),Infrastructure,DevOps Eng,,Not Started,Cover: data pipeline code / model code / infrastructure code
+DevOps Engineer,Day 4,DV-008,Configure artifact repository and versioning,Infrastructure,DevOps Eng,DV-007,Not Started,
+DevOps Engineer,Day 5,DV-009,Set up monitoring and alerting framework,Infrastructure,DevOps Eng,,Not Started,Pipeline health / job failures / data quality alerts
+DevOps Engineer,Day 5,DV-010,Configure logging and observability stack,Infrastructure,DevOps Eng,DV-009,Not Started,
+DevOps Engineer,Day 6,DV-011,Set up orchestration tooling (Airflow or equivalent),Infrastructure,DevOps Eng,,Not Started,Required for automated pipeline scheduling
+DevOps Engineer,Day 6,DV-012,Configure job scheduling and dependency management,Infrastructure,DevOps Eng,DV-011,Not Started,
+DevOps Engineer,Day 7,DV-013,Provision pre-prod environment (mirror of prod architecture),Infrastructure,DevOps Eng,DV-003,Not Started,Required for acceptance testing before go-live
+DevOps Engineer,Day 7,DV-014,Set up environment promotion workflow (dev -> pre-prod),Infrastructure,DevOps Eng,DV-007 / DV-013,Not Started,
+DevOps Engineer,Day 8,DV-015,Configure access controls and security policies,Infrastructure,DevOps Eng,,Not Started,Data access / API auth / network policies
+DevOps Engineer,Day 8,DV-016,Document infrastructure architecture and runbook,Infrastructure,DevOps Eng,DV-003 through DV-014,Not Started,
+DevOps Engineer,Day 9,DV-017,Validate end-to-end: Spark job -> Iceberg write -> query -> monitoring alert,Infrastructure,DevOps Eng,All DV tasks,Not Started,Smoke test full stack
+DevOps Engineer,Day 9,DV-018,Coordinate with DE team to validate their environment access,Infrastructure,DevOps Eng,DE1-001 / DE2-001,Not Started,
+DevOps Engineer,Day 10,DV-019,Onboarding completion checkpoint - present infrastructure readiness,Checkpoint,DevOps Eng,,Not Started,Cover: environments ready / CI-CD operational / monitoring active
+DevOps Engineer,Day 10,DV-020,Document open issues and infrastructure backlog items,Checkpoint,DevOps Eng,,Not Started,Feed into Sprint 2 backlog
+Tech Architect,Day 1,AR-001,Review solution brief end-to-end - map all technical components,Domain Knowledge,Tech Architect,,Not Started,Focus on: data sources / processing / storage / UI / integrations
+Tech Architect,Day 1,AR-002,Review existing data architecture documentation if available,Domain Knowledge,Tech Architect,,Not Started,
+Tech Architect,Day 2,AR-003,Map all source systems and integration points: iDeal / SmartView (SAP) / BI Tool / P&P / Stewardship,Architecture,Tech Architect,,Not Started,Document: protocols / formats / auth / refresh cadence
+Tech Architect,Day 2,AR-004,Meet with Adam Waszczak (Dir Client Eng) to understand existing architecture landscape,Domain Knowledge,Tech Architect,,Not Started,
+Tech Architect,Day 3,AR-005,Review consolidation architecture: Z Bridge -> Z Dataset -> ZZ file data flow,Architecture,Tech Architect,Finance SME walkthrough,Not Started,Understand current Excel-based consolidation and target automated approach
+Tech Architect,Day 3,AR-006,Map data volumes and growth projections for Linear Ent (18 models) and News (1 model),Architecture,Tech Architect,,Not Started,
+Tech Architect,Day 4,AR-007,Draft ADD outline: sections / scope / architecture principles,Architecture,Tech Architect,,Not Started,Align with solution brief tenets (Transparency / Reliability / Evidence / Focused Delivery)
+Tech Architect,Day 4,AR-008,Define Iceberg table design patterns: partitioning / schema evolution / time travel,Architecture,Tech Architect,,Not Started,Must support historical data management and seasonality signals
+Tech Architect,Day 5,AR-009,Define data model patterns for analytical dataset,Architecture,Tech Architect,AR-005,Not Started,Must support: revenue by demand source / platform / content type / ad product
+Tech Architect,Day 5,AR-010,Define API and interface patterns for future UI layer (Milestone 7),Architecture,Tech Architect,,Not Started,Inform UI design decisions early
+Tech Architect,Day 6,AR-011,Establish data governance standards: naming / versioning / lineage / quality,Architecture,Tech Architect,,Not Started,Align with acceptance criteria: data documentation deliverable
+Tech Architect,Day 6,AR-012,Define security architecture: data access / PII handling / audit requirements,Architecture,Tech Architect,,Not Started,Internal Audit team (Jillian Niessing) will review
+Tech Architect,Day 7,AR-013,Review and align infrastructure design with DevOps,Architecture,Tech Architect,DevOps,Not Started,Validate: compute / storage / networking / monitoring
+Tech Architect,Day 7,AR-014,Define pipeline architecture patterns: ingestion / transformation / loading / orchestration,Architecture,Tech Architect,AR-003,Not Started,
+Tech Architect,Day 8,AR-015,Draft ADD section: data architecture (source systems / Iceberg / analytical dataset),Architecture,Tech Architect,AR-003 through AR-009,Not Started,
+Tech Architect,Day 8,AR-016,Draft ADD section: application architecture (pipeline / model / UI),Architecture,Tech Architect,AR-010 / AR-014,Not Started,
+Tech Architect,Day 9,AR-017,Review ADD draft sections with Engagement Lead (Sana Hassan),Validation,Tech Architect,,Not Started,Ensure alignment with delivery plan and milestones
+Tech Architect,Day 9,AR-018,Incorporate feedback and identify sections needing stakeholder input,Architecture,Tech Architect,AR-017,Not Started,
+Tech Architect,Day 10,AR-019,Onboarding completion checkpoint - present ADD outline and architecture decisions,Checkpoint,Tech Architect,,Not Started,Cover: architecture patterns / key decisions / open items
+Tech Architect,Day 10,AR-020,Document architecture decision records (ADRs) for key choices made,Checkpoint,Tech Architect,,Not Started,Feed into ADD and Sprint 2 backlog
+Finance SME,Day 1,FS-001,Review solution brief and confirm MVP scope alignment with Finance leadership,Domain Knowledge,Evgeniya Kapusta,,Not Started,Validate P1 scope: Linear Entertainment + Linear News
+Finance SME,Day 1,FS-002,Coordinate with Katie Kennedy / Linda Ramos on model access and data sharing,Stakeholder Mgmt,Evgeniya Kapusta,,Not Started,
+Finance SME,Day 2,FS-003,Schedule model walkthrough sessions with Natalia Gordienko (Entertainment),Stakeholder Mgmt,Evgeniya Kapusta,,Not Started,
+Finance SME,Day 2,FS-004,Schedule model walkthrough sessions with Jamie Jackette (News / CNN),Stakeholder Mgmt,Evgeniya Kapusta,,Not Started,
+Finance SME,Day 3,FS-005,Conduct and record walkthrough: Linear Entertainment model logic - revenue calculations,Model Documentation,Evgeniya Kapusta,FS-003,Not Started,Cover: BUF / CUF / Scatter Mix / revenue by demand source
+Finance SME,Day 3,FS-006,Document Entertainment revenue calculation rules in structured format,Model Documentation,Evgeniya Kapusta,FS-005,Not Started,Formulas / conditions / exceptions
+Finance SME,Day 4,FS-007,Conduct and record walkthrough: Linear Entertainment - liability / ADU / FDR calculations,Model Documentation,Evgeniya Kapusta,FS-003,Not Started,Cover: average CPM -> liability estimate -> cross-network reallocation
+Finance SME,Day 4,FS-008,Document Entertainment liability and ADU rules in structured format,Model Documentation,Evgeniya Kapusta,FS-007,Not Started,
+Finance SME,Day 5,FS-009,Conduct and record walkthrough: Linear News (CNN) model logic,Model Documentation,Evgeniya Kapusta,FS-004,Not Started,Cover: preemptions / breaking news / structural differences from Entertainment
+Finance SME,Day 5,FS-010,Document News model calculation rules in structured format,Model Documentation,Evgeniya Kapusta,FS-009,Not Started,
+Finance SME,Day 6,FS-011,Map all manual adjustments made post-calculation in both Ent and News models,Model Documentation,Evgeniya Kapusta,FS-006 / FS-010,Not Started,Classify: automatable rule vs judgmental overlay (per Transparency tenet)
+Finance SME,Day 6,FS-012,Document data source refresh cadence and timing dependencies,Model Documentation,Evgeniya Kapusta,,Not Started,Stewardship mid-quarter availability / P&P refresh timing
+Finance SME,Day 7,FS-013,Document liability calculation traceability requirements,Model Documentation,Evgeniya Kapusta,FS-008,Not Started,Goal: make liability traceable/drillable per solution brief
+Finance SME,Day 7,FS-014,Provide historical forecast vs actuals data for accuracy baseline,Data Provision,Evgeniya Kapusta,,Not Started,Needed by DS for backtesting framework design
+Finance SME,Day 8,FS-015,Review DE team questions on Excel model structure and data fields,Validation,Evgeniya Kapusta,DE teams,Not Started,Async review of documented findings
+Finance SME,Day 8,FS-016,Validate dimension definitions documented by BA team,Validation,Evgeniya Kapusta,BA-011 / BA-012,Not Started,
+Finance SME,Day 9,FS-017,Record video walkthroughs of key model sections for offshore team async consumption,Model Documentation,Evgeniya Kapusta,FS-005 through FS-010,Not Started,Critical for offshore handoff
+Finance SME,Day 9,FS-018,Compile complete rule catalog draft (Entertainment + News),Model Documentation,Evgeniya Kapusta,All FS documentation tasks,Not Started,
+Finance SME,Day 10,FS-019,Onboarding completion checkpoint - present rule catalog and walkthrough status,Checkpoint,Evgeniya Kapusta,,Not Started,Cover: rules documented / gaps / decisions needed from Finance leadership
+Finance SME,Day 10,FS-020,Document decisions needed from Finance leadership for MVP,Checkpoint,Evgeniya Kapusta,,Not Started,Minimum viable parity definition / which manual adjustments to automate now
